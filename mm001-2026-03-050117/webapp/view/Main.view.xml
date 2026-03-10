@@ -1,0 +1,132 @@
+<mvc:View controllerName="mm001.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    
+    xmlns:f="sap.f"
+    xmlns:s="sap.ui.comp.smartfilterbar"
+    xmlns:st="sap.ui.comp.smarttable"
+    xmlns:t="sap.ui.table"
+    xmlns:core="sap.ui.core"
+    xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+>
+    <f:DynamicPage id="dynamicPageId" >
+        <f:title>
+            <f:DynamicPageTitle >
+                <f:heading>
+                    <Title id="titleId" text="{i18n>title}" />
+                </f:heading>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:header>
+            <f:DynamicPageHeader >
+                <s:SmartFilterBar 
+                    id="smartFilterBarId"
+                    entitySet="OrderService1"
+                    persistencyKey="smartFilterKey"
+                >
+                    <s:controlConfiguration>
+                        <s:ControlConfiguration 
+                            key="Status"
+                            label="Status"
+                            index="0"
+                        >
+                        <s:customControl>
+                            <Select 
+                                id="statusFilterSelect"
+                                selectedKey="ALL"
+                                change="onStatusFilterChange"
+                            >
+                                <core:Item key="ALL"     text="All" />
+                                <core:Item key="SUCCESS" text="Success" />
+                                <core:Item key="WARNING" text="Warning" />
+                                <core:Item key="ERROR"   text="Error" />
+                            </Select>
+                        </s:customControl>
+                        </s:ControlConfiguration>
+                        
+                        <s:ControlConfiguration 
+                            key="Plant"
+                            mandatory="mandatory"
+                            index="2"
+                        />
+                    </s:controlConfiguration>
+                </s:SmartFilterBar >
+            </f:DynamicPageHeader>
+        </f:header>
+
+        <f:content>
+            <st:SmartTable 
+                id="smartTableId"
+                entitySet="OrderService1"
+                smartFilterId="smartFilterBarId"
+                tableType="Table"
+                useVariantManagement="true"
+                useTablePersonalisation="true"
+                persistencyKey="smartTableKey"
+                header="{i18n>title}"
+                showRowCount="true"
+                beforeRebindTable="onBeforeRebindTable"
+                app:useSmartToggle="true"
+                app:useSmartField="false"
+                editable="true"
+                editTogglable="true"
+            >
+                <st:customData>
+                    <core:CustomData key="useSmartToggle" value="true" />
+                    <core:CustomData key="useSmartField"  value="false" />
+                </st:customData>
+                <t:Table>
+                    <t:columns>
+                        <t:Column >
+                            <t:customData>
+                                <core:CustomData 
+                                    key="p13nData"
+                                    value='{
+                                        "columnKey" : "OrderNumber",
+                                        "leadingProperty" : "OrderNumber",
+                                        "sortProperty" : "OrderNumber",
+                                        "filterProperty" : "OrderNumber",
+                                        "type" : "string"
+                                    }'
+                                />
+                            </t:customData>
+                            <t:label>
+                                <Label text="Order ID" />
+                            </t:label>
+                            <t:template>
+                                <Label text="{OrderNumber}" design="Bold" />
+                            </t:template>
+                        </t:Column>
+                        <t:Column hAlign="Center" >
+                            <t:customData>
+                                <core:CustomData 
+                                    key="p13nData"
+                                    value='{
+                                        "columnIndex" : "0"
+                                    }'
+                                />
+                            </t:customData>
+                            <t:label>
+                                <Label text="Status" />
+                            </t:label>
+                            <t:template>
+                                <ObjectStatus
+                                    text="{= ${Quantity} >= 200 ? 'Error' : ${Quantity} >= 100 ? 'Warning' : 'Success'}"
+                                    state="{= ${Quantity} >= 200 ? 'Error' : ${Quantity} >= 100 ? 'Warning' : 'Success'}"
+                                    icon="{= ${Quantity} >= 200 ? 'sap-icon://status-negative' : ${Quantity} >= 100 ? 'sap-icon://warning2' : 'sap-icon://sys-enter-2'}"
+                                />
+                                <!-- 위원님 방식 -->
+                                <!-- <ObjectStatus
+                                    text="{path: 'Quantity', formatter: '.formatStatusText'}"
+                                    state="{path: 'Quantity', formatter: '.formatStatusStatus'}"
+                                    icon="{path: 'Quantity', formatter: '.formatStatusIcon'}"
+                                /> -->
+                            </t:template>
+                        </t:Column>
+                    </t:columns>
+                </t:Table>
+            </st:SmartTable>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>
